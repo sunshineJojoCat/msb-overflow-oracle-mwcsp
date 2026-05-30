@@ -963,7 +963,7 @@ All source code used to generate the results, tables, and figures in this paper 
 
 \begin{itemize}
   \item \textbf{Source repository:} \url{https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}
-  \item \textbf{Archived snapshot (this version):} Zenodo, \texttt{DOI:10.5281/zenodo.20454051} (release \texttt{v1.0.1}), resolvable at \url{https://doi.org/10.5281/zenodo.20454051}
+  \item \textbf{Archived snapshot (this version):} Zenodo, \texttt{DOI:10.5281/zenodo.20454051} (release \texttt{v1.0.1})
 \end{itemize}
 
 The repository is organised as a self-contained reproducibility package: each table and each figure in the paper maps to exactly one script, with the mapping documented in the top-level \texttt{README}. Brute-force ground-truth scores for all benchmark topologies are computed on the fly by \texttt{verify\_table2.py}; no external datasets are required to reproduce any number in the paper. The compiled environment is Qiskit~$2.2$ with Qiskit-Aer~$0.17$ on Python~$3.9$, with all transpilation passes run at \texttt{optimization\_level=3} on the basis gate set $\{cx, id, rz, sx, x\}$ to match the IBM Eagle/Heron native instruction set; the exact dependency list is fixed in the repository's \texttt{requirements.txt}.
