@@ -962,10 +962,7 @@ By reducing the terminating validation to a single Clifford-compatible CNOT for 
 
 All source code used to generate the results, tables, and figures in this paper is openly available. The package includes the three oracle constructors (Min Width, Min Depth, Balanced) and the classical brute-force verifier (\texttt{verify\_table2.py}); the empirical scaling harness for Table~\ref{tab:scaling_measured} (\texttt{extend\_table\_scaling.py}); the depolarising-noise sweep that produced Table~\ref{tab:noisy} (\texttt{noisy\_simulation.py}); the QAOA $p{=}7$ baseline that produced the QAOA columns of Table~\ref{tab:empirical_scaling} (\texttt{qaoa\_depth\_sweep.py}); and the Belletti-style Boolean oracle reimplementation used in Table~\ref{tab:belletti_compare} (\texttt{belletti\_baseline.py}). The \LaTeX{} source, the BibTeX bibliography, and all eight published PNG figures are also bundled so that the PDF can be rebuilt from scratch.
 
-\begin{itemize}
-  \item \textbf{Source repository:} \url{https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}
-  \item \textbf{Archived snapshot (this version):} Zenodo, \texttt{DOI:10.5281/zenodo.20454051} (release \texttt{v1.0.1})
-\end{itemize}
+The source repository is hosted on GitHub at \url{https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}, and the archived snapshot accompanying this manuscript (release \texttt{v1.0.1}) is deposited on Zenodo with \texttt{DOI:10.5281/zenodo.20454051}.
 
 The repository is organised as a self-contained reproducibility package: each table and each figure in the paper maps to exactly one script, with the mapping documented in the top-level \texttt{README}. Brute-force ground-truth scores for all benchmark topologies are computed on the fly by \texttt{verify\_table2.py}; no external datasets are required to reproduce any number in the paper. The compiled environment is Qiskit~$2.2$ with Qiskit-Aer~$0.17$ on Python~$3.9$, with all transpilation passes run at \texttt{optimization\_level=3} on the basis gate set $\{cx, id, rz, sx, x\}$ to match the IBM Eagle/Heron native instruction set; the exact dependency list is fixed in the repository's \texttt{requirements.txt}.
 
