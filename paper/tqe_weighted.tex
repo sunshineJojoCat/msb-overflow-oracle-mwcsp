@@ -201,12 +201,12 @@ MWCSP with the following contributions:
 
     \item \emph{Three oracle variants---Min Width, Min Depth, and
     Balanced---that span the width--depth continuum,} with the
-    Balanced chunk size set by the parameter-free heuristic of
-    Belletti~\textit{et al.}~\cite{belletti2025}. We measure all three
-    on the same Qiskit pipeline and report the actual depth gap
-    between Min Width and Min Depth ($1$--$11\%$ at $N \le 12$),
-    isolating the ripple-carry adder as the remaining serialisation
-    bottleneck (Section~\ref{sec:methodology}).
+    Balanced chunk size set by a parameter-free triangular-packing
+    heuristic ($C(C-1)/2 \ge |E|-1$). We measure all three on the
+    same Qiskit pipeline and report the actual depth gap between Min
+    Width and Min Depth ($1$--$11\%$ at $N \le 12$), isolating the
+    ripple-carry adder as the remaining serialisation bottleneck
+    (Section~\ref{sec:methodology}).
 
     \item \emph{A like-for-like resource benchmark against two
     baselines.} We reimplement the Belletti~\cite{belletti2025}
@@ -487,7 +487,7 @@ We adopt the Balanced chunk size
 C^* = \left\lceil \frac{1 + \sqrt{8|E| - 7}}{2} \right\rceil,
 \label{eq:cstar}
 \end{equation}
-inherited from the auto-chunking heuristic of Belletti~\textit{et al.}~\cite{belletti2025}. Equivalently, $C^*$ is the smallest integer satisfying $C(C-1)/2 \ge |E|-1$, a triangular-packing condition over the per-batch edge-evaluation ancillae that gives a parameter-free default and removes the need to hand-tune $C$ per graph.
+which is the smallest integer satisfying $C(C-1)/2 \ge |E|-1$. We use this as a parameter-free triangular-packing heuristic: it allocates just enough ancillae so that the per-batch pairwise edge-evaluation pattern fits without slack, and removes the need to hand-tune $C$ per graph.
 
 We emphasise that $C^*$ is operational rather than the closed-form optimum of a space-time cost. A na\"\i ve product objective $\Phi(C) = (Nq + S + C) \lceil |E|/C \rceil$ has $\partial\Phi/\partial C < 0$ once the ceiling is approximated continuously (the second term decays as $1/C$ while the first grows only linearly), so under this objective the unconstrained optimum is $C = |E|$, i.e.\ the Min Depth variant. The practical justification for the Balanced point is empirical: across the five benchmark topologies, Eq.~\eqref{eq:cstar} yields qubit widths strictly between Min Width and Min Depth (Table~\ref{tab:results_n}) and depths within $1$--$3\%$ of Min Width, at a fraction of the ancilla cost of Min Depth. Realising a genuine depth gain over Min Width---rather than the modest 1--11\% observed here---requires parallelising the ripple-carry adder itself, since the shared accumulator currently serialises every $\textsc{Add}(w_e)$ regardless of $C$ (Section~\ref{sec:practical_limits}).
 
@@ -565,7 +565,7 @@ Weighted Triangle & 27 & 6 & 6 & 1 & \checkmark \\
 Heavy Star $S_4$ & 81 & 11 & 12 & 1 & \checkmark \\
 Diagonal Square & 81 & 18 & 6 & 2 & \checkmark \\
 Path $P_5$ & 243 & 18 & 16 & 1 & \checkmark \\
-Frustrated $K_4$ & 81 & 22 & 6 & 2 & \checkmark \\
+Frustrated $K_4$ & 81 & 50 & 6 & 2 & \checkmark \\
 \bottomrule
 \end{tabular}%
 }
@@ -830,11 +830,11 @@ This paper addresses one structural bottleneck of exact Grover oracles for the M
 
 We are careful to distinguish the comparator-stage saving from the full-circuit cost. Two MCX-heavy blocks remain on the per-iteration critical path: (i) the per-edge ripple-carry $\textsc{Add}(w_e)$, which is intrinsic to the weighted formulation and now dominates the transpiled depth, and (ii) the standard Grover diffusion operator $\mathcal{A}_\mathrm{init} S_0 \mathcal{A}_\mathrm{init}^{-1}$, whose $S_0$ block still contains a multi-controlled phase on the $N q$ coloring qubits. The empirical fit $D_{MW} \approx \kappa \cdot |E| \cdot S^2$ extracted in Section~\ref{sec:scaling_measured} reflects these two terms, not the comparator. Against the Belletti Boolean baseline, the resulting net trade is $1$--$2$ qubits saved at the cost of $2.6\times$--$9.1\times$ depth, with the depth penalty coming from the adder block, not the new comparator. We therefore frame the contribution as a depth-prefactor reduction at the comparator stage and a soundness-proved range-search primitive, rather than a wholesale removal of MCX overhead.
 
-The resulting depths place all five benchmark topologies beyond the practical noise floor of present IBM Heron-class hardware (Section~\ref{tab:noisy}); Path $P_5$ and Frustrated $K_4$ sit at the uniform measurement floor under Heron-baseline depolarising noise. The natural deployment target is therefore early fault-tolerant quantum computing, where the MSB-Overflow comparator's single CNOT becomes especially attractive against the magic-state cost of the adder Toffolis. A genuine depth gain beyond Min Width additionally requires parallelising the ripple-carry adder itself (carry-save or partial-sum-tree variants), which we identify as the primary follow-up to this work.
+The resulting depths place all five benchmark topologies beyond the practical noise floor of present IBM Heron-class hardware (Table~\ref{tab:noisy} and the accompanying discussion in Section~\ref{sec:benchmarks}); Path $P_5$ and Frustrated $K_4$ sit at the uniform measurement floor under Heron-baseline depolarising noise. The natural deployment target is therefore early fault-tolerant quantum computing, where the MSB-Overflow comparator's single CNOT becomes especially attractive against the magic-state cost of the adder Toffolis. A genuine depth gain beyond Min Width additionally requires parallelising the ripple-carry adder itself (carry-save or partial-sum-tree variants), which we identify as the primary follow-up to this work.
 
 \subsection{Future Work: Minimum Weight Vertex Cover}
 
-The Minimum Weight Vertex Cover (MWVC) problem~\cite{saha2020} asks
+The Minimum Weight Vertex Cover (MWVC) problem~\cite{garey1979,west2001} asks
 for a minimum weight subset $S \subseteq V$ such that every edge
 $(u,v) \in E$ has at least one endpoint in $S$, i.e.,
 $x_u \vee x_v = 1$ for all $(u,v) \in E$, where $x_v \in \{0,1\}$
@@ -996,7 +996,7 @@ The repository is organised as a self-contained reproducibility package: each ta
 
 \section*{Acknowledgment}
 
-The authors would like to express profound gratitude to the faculty and advisors at the Department of Computer Engineering, Chulalongkorn University, for their continuous support and guidance during the formulation of this topological analysis. 
+The authors would like to express their gratitude to the faculty and advisors at the Department of Computer Engineering, Chulalongkorn University, for their continuous support and guidance during the formulation of this work. 
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
