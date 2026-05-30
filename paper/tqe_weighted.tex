@@ -26,7 +26,7 @@
 \corresp{Corresponding author: Witchapat Issariyawat (email: witchapat.iss@student.chula.ac.th).}
 
 \begin{abstract}
-Solving the Maximum Weight Colorable Subgraph Problem (MWCSP) on near-term quantum hardware is constrained by qubit count and circuit depth. Grover's Algorithm offers a quadratic speedup for combinatorial search, but traditional exact-match oracles rely on deep Multi-Controlled X (MCX) gates to verify cost constraints of the form $\text{score} = \text{target}$. We propose a space-efficient architecture based on an Overflow-Flag Range Comparator. Appending one Most Significant Bit (MSB) qubit to the weight accumulator and initializing the register with a classically computed offset ($\text{Offset} = 2^{S-1} - \text{Target}$) causes any configuration meeting the target score to overflow the accumulator and flip the MSB. The phase-kickback layer therefore reduces from an $\mathcal{O}(S^2)$ MCX network to a single CNOT on the MSB. Combined with a Custom State Preparation procedure that prunes invalid color permutations from the initial superposition, our Overflow-Flag Oracles save qubits relative to per-edge flag-ancilla baselines and collapse the $\mathcal{O}(S^2)$ MCX comparator network to a single CNOT, at the cost of a per-edge ripple-carry adder specific to the weighted formulation. Empirical benchmarking across five graph topologies confirms that the design provides a practical, space-efficient route for exact range-based combinatorial search on early fault-tolerant, space-constrained quantum processors.
+Exact Grover oracles for the Maximum Weight Colorable Subgraph Problem (MWCSP) pay an $\mathcal{O}(S^2)$ Multi-Controlled X (MCX) cost at the comparator stage of every iteration, where $S$ is the weight-accumulator width. We propose an Overflow-Flag Range Comparator that replaces this comparator sub-block with a single CNOT: pre-loading the accumulator with the classical offset $\text{Offset} = 2^{S-1}-\text{Target}$ makes any configuration with score $\ge$ Target overflow into the Most Significant Bit, so the phase kickback reduces to one CNOT on the MSB. A Custom State Preparation layer adopting the Shukla--Vedula construction restricts the initial superposition to the $K^N$ valid colourings, removing the per-node invalid-colour checker subcircuits used by prior designs. On a like-for-like Qiskit pipeline against a reimplemented Belletti-style Boolean baseline, this combination saves $1$--$2$ qubits across our five benchmark topologies but pays $2.6\times$--$9.1\times$ more circuit depth, because the comparator-stage saving is recovered against a ripple-carry adder that the weighted formulation introduces and that now dominates the per-iteration cost. On a noise-free Aer simulator, a single complete Grover run at the empirically-optimal iteration count recovers the global optimum in $\ge 96\%$ of $2048$ shots across all five topologies, versus $3\%$--$22\%$ for QAOA at $p=7$ on the same shot budget. Resource projections through $N=100$ and a depolarising-noise sweep against IBM Heron-class baselines indicate that the resulting circuit depths sit beyond near-term NISQ coherence limits, so we position the design as a depth-prefactor reduction and a structural primitive for early fault-tolerant range-based combinatorial search rather than a near-term NISQ algorithm.
 \end{abstract}
 
 \begin{keywords}
@@ -180,25 +180,41 @@ This paper proposes a space-efficient Grover oracle family for the
 MWCSP with the following contributions:
 %
 \begin{enumerate}
-    \item A Custom State Preparation operator that initializes the
-    Grover search over $K^N$ valid colorings, requiring
-    $\mathcal{O}(\log K)$ gates per node and no ancilla qubits
-    (Section~\ref{sec:methodology}).
+    \item \emph{Integration of the Shukla--Vedula uniform-superposition
+    construction~\cite{shukla2024} as a Custom State Preparation layer
+    within a Grover oracle for arbitrary $K$.} The component itself is
+    not new, but using it to remove the per-node invalid-colour
+    checker subcircuits (and the MCX depth they impose every iteration)
+    is, to our knowledge, not previously documented in the MWCSP
+    literature (Section~\ref{sec:methodology}).
 
-    \item An MSB-Overflow Range Comparator that detects score
-    $\geq T$ with a single CNOT, replacing the $\mathcal{O}(S^2)$
-    MCX comparator of exact-match designs
-    (Section~\ref{sec:methodology}).
+    \item \emph{An MSB-Overflow Range Comparator obtained by relocating
+    the threshold subtraction from the quantum circuit to a classical
+    offset.} Subtract-and-test threshold comparators are folklore in
+    the quantum-arithmetic literature
+    (Section~\ref{sec:qarith_related}); our specific variant
+    pre-computes $\mathrm{Offset} = 2^{S-1} - T$ classically and loads
+    it with a single layer of $X$ gates, so the quantum critical path
+    contains no in-place subtraction and the threshold readout reduces
+    to one CNOT on the MSB. Section~\ref{sec:formal_proofs}
+    establishes soundness on the discrete accumulator domain.
 
-    \item Three oracle variants---Min Width, Min Depth, and
-    Balanced---with the optimal ancilla count $C^*$ derived
-    analytically to minimize the space-time cost product
-    (Section~\ref{sec:methodology}).
+    \item \emph{Three oracle variants---Min Width, Min Depth, and
+    Balanced---that span the width--depth continuum,} with the
+    Balanced chunk size set by the parameter-free heuristic of
+    Belletti~\textit{et al.}~\cite{belletti2025}. We measure all three
+    on the same Qiskit pipeline and report the actual depth gap
+    between Min Width and Min Depth ($1$--$11\%$ at $N \le 12$),
+    isolating the ripple-carry adder as the remaining serialisation
+    bottleneck (Section~\ref{sec:methodology}).
 
-    \item Empirical validation via Qiskit AerSimulator transpilation
-    across five weighted graph topologies, with correctness confirmed
-    against classical brute-force enumeration
-    (Section~\ref{sec:benchmarks}).
+    \item \emph{A like-for-like resource benchmark against two
+    baselines.} We reimplement the Belletti~\cite{belletti2025}
+    Boolean oracle and a one-hot QAOA ($p{=}7$, multi-restart L-BFGS-B)
+    in the same Qiskit pipeline, reporting transpiled gate counts,
+    per-iteration depths, empirical $96$--$99\%$ Grover success rates
+    versus QAOA $3$--$22\%$, and a noise sweep against IBM Heron-class
+    depolarising parameters (Section~\ref{sec:benchmarks}).
 \end{enumerate}
 
 \section{Problem Formulation \& Cost Function}
@@ -465,12 +481,15 @@ Q_{Bal} = N \cdot q + S + C + 1, \quad D_{Bal} \in \mathcal{O}(\lceil |E|/C \rce
 \end{equation}
 which spans the full width--depth continuum between the Min Width ($C{=}1$) and Min Depth ($C{=}|E|$) extremes.
 
-\paragraph{Derivation of $C^*$} The optimal ancilla count $C^*$ arises from minimizing the total space-time cost function $\Phi(C) = (N \cdot q + S + C) \times \lceil |E|/C \rceil$, representing the product of qubit width and circuit depth. Treating the ceiling as a continuous approximation $|E|/C$ and differentiating, $\partial \Phi / \partial C = 0$ yields the quadratic $C^2 + C - |E| = 0$, whose positive root is $(-1 + \sqrt{1 + 4|E|})/2$. Taking the ceiling for an integer ancilla count:
+\paragraph{Operational choice of $C^*$}
+We adopt the Balanced chunk size
 \begin{equation}
-C^* = \left\lceil \frac{-1 + \sqrt{1 + 4|E|}}{2} \right\rceil
+C^* = \left\lceil \frac{1 + \sqrt{8|E| - 7}}{2} \right\rceil,
 \label{eq:cstar}
 \end{equation}
-Intuitively, $C^*$ balances two competing costs: adding ancillae reduces depth (fewer batches) but increases width. The square-root scaling means that doubling the edge count only increases the optimal ancilla count by approximately $\sqrt{2}$, ensuring the Balanced variant scales gracefully.
+inherited from the auto-chunking heuristic of Belletti~\textit{et al.}~\cite{belletti2025}. Equivalently, $C^*$ is the smallest integer satisfying $C(C-1)/2 \ge |E|-1$, a triangular-packing condition over the per-batch edge-evaluation ancillae that gives a parameter-free default and removes the need to hand-tune $C$ per graph.
+
+We emphasise that $C^*$ is operational rather than the closed-form optimum of a space-time cost. A na\"\i ve product objective $\Phi(C) = (Nq + S + C) \lceil |E|/C \rceil$ has $\partial\Phi/\partial C < 0$ once the ceiling is approximated continuously (the second term decays as $1/C$ while the first grows only linearly), so under this objective the unconstrained optimum is $C = |E|$, i.e.\ the Min Depth variant. The practical justification for the Balanced point is empirical: across the five benchmark topologies, Eq.~\eqref{eq:cstar} yields qubit widths strictly between Min Width and Min Depth (Table~\ref{tab:results_n}) and depths within $1$--$3\%$ of Min Width, at a fraction of the ancilla cost of Min Depth. Realising a genuine depth gain over Min Width---rather than the modest 1--11\% observed here---requires parallelising the ripple-carry adder itself, since the shared accumulator currently serialises every $\textsc{Add}(w_e)$ regardless of $C$ (Section~\ref{sec:practical_limits}).
 
 \subsection{End-to-End Circuit Architecture Walkthrough}
 \label{sec:walkthrough}
@@ -552,12 +571,12 @@ Frustrated $K_4$ & 81 & 22 & 6 & 2 & \checkmark \\
 }
 \end{table}
 
-Across all five topologies and all three oracle variants (Min Width, Min Depth, Balanced), the quantum algorithm consistently identified the exact global maximum with dominant measurement probability. Crucially, this correctness extends to the Frustrated $K_4$ graph---a topology where conventional Belletti-style oracles would return exactly zero valid solutions, as no proper 3-coloring exists for $K_4$. Our MSB-Overflow architecture correctly identifies the configuration maximizing the sum of properly colored edges, demonstrating the inherent superiority of range-based ($\ge$) evaluation over exact-match ($==$) approaches.
+Across all five topologies and all three oracle variants (Min Width, Min Depth, Balanced), the quantum algorithm consistently identified the exact global maximum with dominant measurement probability. The Frustrated $K_4$ row is the qualitative point here: Belletti-style Boolean oracles phase-mark only proper colourings and therefore return zero amplitude on this graph by construction, since no proper $3$-coloring exists. The MSB-Overflow oracle instead encodes the optimisation problem (``maximise the weight of properly coloured edges'') rather than the decision problem (``is the colouring proper everywhere?'')---the two oracles solve different problems, and the comparison only makes sense once that framing difference is acknowledged. On non-frustrated graphs the two coincide on which states they mark; on frustrated graphs the MSB-Overflow oracle is the only one that returns a usable answer.
 
 Fig.~\ref{fig:measurement} visualizes the Grover measurement probability distribution for the Frustrated $K_4$ topology, confirming that target optimal configurations are amplified to dominant probabilities well above the uniform baseline.
 
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\columnwidth]{fig_measurement.png}
-{Grover measurement outcome distribution for the Frustrated $K_4$ graph ($K\!=\!3$, 2 iterations) with edge weights $\{(0,1,4),(0,2,5),(0,3,3),(1,2,6),(1,3,2),(2,3,4)\}$. The x-axis represents the raw quantum bitstring measurements, which map directly to the corresponding graph coloring configurations. Green bars indicate target optimal states (score $= 22$, six valid colourings), amplified to dominant probability. The dashed red line marks the uniform baseline $1/K^N = 1/81$.\label{fig:measurement}}
+{Grover measurement outcome distribution for the Frustrated $K_4$ graph ($K\!=\!3$, 2 iterations) with edge weights $\{(0,1,10),(0,2,10),(0,3,10),(1,2,10),(1,3,10),(2,3,2)\}$ as used throughout the benchmark suite (Section~\ref{sec:benchmarks}). The total possible weight is $W_{\max}=52$, giving the accumulator width $S = \lceil\log_2(53)\rceil + 1 = 7$ reported in Table~\ref{tab:tgate}. The achievable optimum is $50$ (the only frustrated edge is the lightest, weight $2$), which the oracle identifies through MSB overflow. The x-axis is the raw quantum bitstring measurement, which maps directly to the corresponding graph coloring; green bars indicate the optimum-scoring states, amplified to dominant probability. The dashed red line marks the uniform baseline $1/K^N = 1/81$.\label{fig:measurement}}
 
 \subsection{Transpiled Circuit Metrics}
 We extracted the exact spatial and temporal execution metrics for a single Grover iterator ($G = -\mathcal{A}_{\text{init}} S_0 \mathcal{A}_{\text{init}}^{-1} S_f$). The reported depth is the depth of the \emph{full} iterator $G$ after transpilation, i.e.\ it includes the compute pass, the phase-kickback CNOT, the per-edge uncomputation of all collision-check ancillas and Carry-Ripple adders (Algorithm~\ref{alg:oracle}, lines~14--18), and the diffusion operator $\mathcal{A}_{\text{init}} S_0 \mathcal{A}_{\text{init}}^{-1}$; we do not separate compute-only and uncompute halves. Per-iteration cost can be approximately halved to obtain the forward arithmetic path. Table~\ref{tab:results_n} details the empirical qubit width and transpiled circuit depth for all three oracle variants across all five topologies.
@@ -795,6 +814,9 @@ R = \left\lfloor \frac{\pi}{4} \sqrt{M / |\mathcal{S}^*|} \right\rfloor,
 \end{equation}
 which remains exponential in $N$ regardless of how aggressively the per-iteration oracle is compressed. The contribution of this paper is therefore best understood as reducing the prefactor in front of the unavoidable $\sqrt{M / |\mathcal{S}^*|}$ scaling, not as eliminating it.
 
+\paragraph{Unknown $|\mathcal{S}^*|$ at deployment time.}
+Eq.~\eqref{eq:grover_iters} requires $|\mathcal{S}^*|$ to set $R$, but in a deployed MWCSP instance the number of optimal colourings is generally not known a priori. The standard remedy is the exponential-search wrapper of Brassard~\textit{et al.}~\cite{brassard2002}: run the oracle with $R$ drawn uniformly from $\{0, 1, \dots, \lceil m \rceil - 1\}$, doubling $m$ on each unsuccessful round until a marked configuration is sampled. The wrapper finds a marked state in $\mathcal{O}(\sqrt{M/|\mathcal{S}^*|})$ expected oracle calls without knowing $|\mathcal{S}^*|$ and preserves the $\sqrt{M}$ Grover speedup. In our reported empirical runs we use the empirically-optimal $R$ from Table~\ref{tab:correctness} to isolate the per-iteration oracle cost; a deployed implementation should compose the MSB-Overflow oracle with this exponential-search wrapper, at the cost of a $\log$-factor in the constant.
+
 \paragraph{When does Grover apply?}
 For the benchmark topologies in Table~\ref{tab:results_n}, the empirically-optimal $R$ ranges from $1$ to $2$ (Table~\ref{tab:correctness}) and the total CX-equivalent depth of a full run (oracle + diffuser, $R$ iterations) stays below $10^4$ layers---an envelope already achievable on near-term fault-tolerant prototypes. For the speculative regime $N{=}20, |E|{=}30$ in Table~\ref{tab:scalability}, $R \approx \lfloor (\pi/4)\sqrt{3^{20}} \rfloor \approx 1.86 \times 10^5$, and combining with the Min Depth projection yields an aggregate workload near $10^7$ $T$-gates---demanding but plausible for a mature fault-tolerant device. For $N{=}100$, $R \approx 7 \times 10^{23}$, which we acknowledge places the corresponding row of Table~\ref{tab:scalability} firmly outside the regime of any conceivable hardware. We retain the $N \in \{50, 100\}$ projections only to expose the asymptotic shape of the qubit and $T$-gate dependence on graph size, not as feasibility claims.
 
@@ -804,9 +826,11 @@ Algorithm~\ref{alg:oracle} accepts the threshold $T$ as a classical input. In a 
 \section{Conclusion \& Future Work}
 
 \subsection{Concluding Remarks}
-This paper addresses a key structural bottleneck limiting the use of exact Grover Oracles for the Maximum Weight Colorable Subgraph Problem (MWCSP) on space-constrained superconducting hardware. By replacing the deep MCX-based exact-match comparator with an MSB Overflow-Flag range comparator, we collapse the phase-kickback validation depth.
+This paper addresses one structural bottleneck of exact Grover oracles for the MWCSP: the $\mathcal{O}(S^2)$ MCX comparator that exact-match designs place on the critical path of every iteration. Pre-loading the accumulator with the classical offset $\text{Offset} = 2^{S-1} - \text{Target}$ reduces that comparator sub-block to a single CNOT on the MSB, and the Custom State Preparation layer removes the per-node invalid-colour checker subcircuits used by prior designs.
 
-Initializing the accumulator with the classical offset $\text{Offset} = 2^{S-1} - \text{Target}$ reduces the $\mathcal{O}(S^2)$ comparator to a single CNOT executing in $\mathcal{O}(1)$ depth. Combined with space-efficient ripple-carry weight accumulators and a custom state preparation that emits only valid color configurations, this design demonstrates a concrete architectural path for executing exact integer Grover searches at scale, eliminating the dominant MCX overhead.
+We are careful to distinguish the comparator-stage saving from the full-circuit cost. Two MCX-heavy blocks remain on the per-iteration critical path: (i) the per-edge ripple-carry $\textsc{Add}(w_e)$, which is intrinsic to the weighted formulation and now dominates the transpiled depth, and (ii) the standard Grover diffusion operator $\mathcal{A}_\mathrm{init} S_0 \mathcal{A}_\mathrm{init}^{-1}$, whose $S_0$ block still contains a multi-controlled phase on the $N q$ coloring qubits. The empirical fit $D_{MW} \approx \kappa \cdot |E| \cdot S^2$ extracted in Section~\ref{sec:scaling_measured} reflects these two terms, not the comparator. Against the Belletti Boolean baseline, the resulting net trade is $1$--$2$ qubits saved at the cost of $2.6\times$--$9.1\times$ depth, with the depth penalty coming from the adder block, not the new comparator. We therefore frame the contribution as a depth-prefactor reduction at the comparator stage and a soundness-proved range-search primitive, rather than a wholesale removal of MCX overhead.
+
+The resulting depths place all five benchmark topologies beyond the practical noise floor of present IBM Heron-class hardware (Section~\ref{tab:noisy}); Path $P_5$ and Frustrated $K_4$ sit at the uniform measurement floor under Heron-baseline depolarising noise. The natural deployment target is therefore early fault-tolerant quantum computing, where the MSB-Overflow comparator's single CNOT becomes especially attractive against the magic-state cost of the adder Toffolis. A genuine depth gain beyond Min Width additionally requires parallelising the ripple-carry adder itself (carry-save or partial-sum-tree variants), which we identify as the primary follow-up to this work.
 
 \subsection{Future Work: Minimum Weight Vertex Cover}
 
