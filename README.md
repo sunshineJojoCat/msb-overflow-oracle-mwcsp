@@ -16,13 +16,8 @@ scratch.
 | Resource | Link |
 |---|---|
 | Source repository (live) | https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp |
-| Archived snapshot for the paper | Zenodo `DOI:10.5281/zenodo.XXXXXXX` |
+| Archived snapshot for the paper | Zenodo [DOI:10.5281/zenodo.20454051](https://doi.org/10.5281/zenodo.20454051) (release `v1.0.1`) |
 | License | MIT (see `LICENSE`) |
-
-> **TODO (pre-submission):** replace the Zenodo `DOI:` placeholder with the
-> DOI minted from the `v1.0-tqe-submission` release once the GitHub release
-> is tagged. The same DOI needs to be updated in
-> `paper/tqe_weighted.tex` (Code and Data Availability section).
 
 ## Citing the code
 
@@ -35,8 +30,8 @@ addition to the paper:
   title     = {{MSB-Overflow Oracle for MWCSP: Reproducibility Package}},
   year      = {2026},
   publisher = {Zenodo},
-  version   = {v1.0-tqe-submission},
-  doi       = {10.5281/zenodo.XXXXXXX},
+  version   = {v1.0.1},
+  doi       = {10.5281/zenodo.20454051},
   url       = {https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}
 }
 ```
