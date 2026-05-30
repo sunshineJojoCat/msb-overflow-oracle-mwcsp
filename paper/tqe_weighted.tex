@@ -960,7 +960,16 @@ By reducing the terminating validation to a single Clifford-compatible CNOT for 
 
 \section*{Code and Data Availability}
 
-All source code used to generate the results, tables, and figures in this paper is openly available. The package includes the three oracle constructors (Min Width, Min Depth, Balanced) and the classical brute-force verifier (\texttt{verify\_table2.py}); the empirical scaling harness for Table~\ref{tab:scaling_measured} (\texttt{extend\_table\_scaling.py}); the depolarising-noise sweep that produced Table~\ref{tab:noisy} (\texttt{noisy\_simulation.py}); the QAOA $p{=}7$ baseline that produced the QAOA columns of Table~\ref{tab:empirical_scaling} (\texttt{qaoa\_depth\_sweep.py}); and the Belletti-style Boolean oracle reimplementation used in Table~\ref{tab:belletti_compare} (\texttt{belletti\_baseline.py}). The \LaTeX{} source, the BibTeX bibliography, and all eight published PNG figures are also bundled so that the PDF can be rebuilt from scratch.
+All source code used to generate the results, tables, and figures in this paper is openly available. The reproducibility package includes:
+\begin{itemize}
+  \setlength\itemsep{1pt}
+  \item \texttt{verify\_table2.py} --- the three oracle constructors (Min Width, Min Depth, Balanced) and the classical brute-force verifier.
+  \item \texttt{extend\_table\_scaling.py} --- empirical scaling harness for Table~\ref{tab:scaling_measured}.
+  \item \texttt{noisy\_simulation.py} --- depolarising-noise sweep that produced Table~\ref{tab:noisy}.
+  \item \texttt{qaoa\_depth\_sweep.py} --- QAOA $p{=}7$ baseline (QAOA columns of Table~\ref{tab:empirical_scaling}).
+  \item \texttt{belletti\_baseline.py} --- Belletti-style Boolean oracle reimplementation (Table~\ref{tab:belletti_compare}).
+\end{itemize}
+The \LaTeX{} source, the BibTeX bibliography, and all eight published PNG figures are also bundled so that the PDF can be rebuilt from scratch.
 
 The source repository is hosted on GitHub at \url{https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}, and the archived snapshot accompanying this manuscript (release \texttt{v1.0.1}) is deposited on Zenodo with \texttt{DOI:10.5281/zenodo.20454051}.
 
