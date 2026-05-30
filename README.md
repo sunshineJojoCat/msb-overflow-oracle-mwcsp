@@ -16,7 +16,7 @@ scratch.
 | Resource | Link |
 |---|---|
 | Source repository (live) | https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp |
-| Archived snapshot for the paper | Zenodo [DOI:10.5281/zenodo.20454051](https://doi.org/10.5281/zenodo.20454051) (release `v1.0.1`) |
+| Archived snapshot for the paper | Zenodo [DOI:10.5281/zenodo.20455567](https://doi.org/10.5281/zenodo.20455567) (release `v1.1.0`) |
 | License | MIT (see `LICENSE`) |
 
 ## Citing the code
@@ -30,8 +30,8 @@ addition to the paper:
   title     = {{MSB-Overflow Oracle for MWCSP: Reproducibility Package}},
   year      = {2026},
   publisher = {Zenodo},
-  version   = {v1.0.1},
-  doi       = {10.5281/zenodo.20454051},
+  version   = {v1.1.0},
+  doi       = {10.5281/zenodo.20455567},
   url       = {https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}
 }
 ```
