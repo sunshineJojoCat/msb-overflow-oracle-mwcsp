@@ -6,8 +6,9 @@ Self-contained reproducibility package for the paper
 > W. Issariyawat and K. Suksen (Chulalongkorn University), 2026.
 
 Every table and figure in the paper can be regenerated from a script in this
-folder. The source tex/bib are also included so the PDF can be rebuilt from
-scratch.
+folder. The paper PDF itself is distributed separately through the journal;
+this repository contains the reproducibility code, the published figures,
+and the dependency lockfile.
 
 ---
 
@@ -41,13 +42,12 @@ addition to the paper:
 ## Folder layout
 
 ```
-research_resources/
+msb-overflow-oracle-mwcsp/
 ├── README.md                              ← this file
-├── paper/
-│   ├── tqe_weighted.tex                   ← LaTeX source
-│   ├── references.bib                     ← BibTeX (22 entries)
-│   └── tqe_weighted.pdf                   ← compiled output
-├── figures/                               ← 8 published PNGs (one per \includegraphics)
+├── LICENSE                                ← MIT
+├── requirements.txt                       ← pinned Python dependencies
+├── .gitignore
+├── figures/                               ← 8 published PNGs (one per \includegraphics in the paper)
 │   ├── fig_all_topologies.png
 │   ├── fig_before_after.png
 │   ├── fig_circuit_adder.png
@@ -90,8 +90,6 @@ python3.9 -m venv .venv
 The pinned versions in `requirements.txt` are the exact ones used to
 produce every numerical result in the paper (Qiskit 2.2.3, Qiskit-Aer
 0.17.2, with NumPy / SciPy / NetworkX / Matplotlib / pandas / pypdf).
-Docker is used only for the LaTeX rebuild (texlive:latest); see
-"Paper" below.
 
 ---
 
@@ -143,26 +141,7 @@ cd scripts/figures
 ../../../.venv/bin/python generate_all_topologies.py
 ```
 
-PNGs land next to the script; copy them into `../../figures/` (or directly
-into `paper/`) to overwrite the published versions.
-
----
-
-## Rebuilding the paper PDF
-
-`paper/` is hermetic — `IEEEtran.cls` is already included. Just:
-
-```bash
-cd paper
-docker run --rm -v "$(pwd):/work" -w /work texlive/texlive:latest \
-  bash -c "pdflatex -interaction=nonstopmode tqe_weighted.tex && \
-           bibtex tqe_weighted && \
-           pdflatex -interaction=nonstopmode tqe_weighted.tex && \
-           pdflatex -interaction=nonstopmode tqe_weighted.tex"
-```
-
-The published copy in `paper/tqe_weighted.pdf` (16 pages) was built with
-this exact command.
+PNGs land next to the script; copy them into `../../figures/` to overwrite the published versions.
 
 ---
 
