@@ -17,7 +17,7 @@ and the dependency lockfile.
 | Resource | Link |
 |---|---|
 | Source repository (live) | https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp |
-| Archived snapshot for the paper | Zenodo [DOI:10.5281/zenodo.20455567](https://doi.org/10.5281/zenodo.20455567) (release `v1.2`) |
+| Archived snapshot for the paper | Zenodo [DOI:10.5281/zenodo.20472159](https://doi.org/10.5281/zenodo.20472159) (release `v1.3`) |
 | License | MIT (see `LICENSE`) |
 
 ## Citing the code
@@ -31,8 +31,8 @@ addition to the paper:
   title     = {{MSB-Overflow Oracle for MWCSP: Reproducibility Package}},
   year      = {2026},
   publisher = {Zenodo},
-  version   = {v1.2},
-  doi       = {10.5281/zenodo.20455567},
+  version   = {v1.3},
+  doi       = {10.5281/zenodo.20472159},
   url       = {https://github.com/sunshineJojoCat/msb-overflow-oracle-mwcsp}
 }
 ```
