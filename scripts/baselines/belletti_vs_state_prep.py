@@ -179,22 +179,34 @@ TOPOLOGIES = [
 ]
 
 
+def sweep_R(oracle_fn, N, edges, R_max=6):
+    """Sweep R = 1..R_max and return (best_R, best_P)."""
+    best_R, best_P = 1, 0.0
+    for R in range(1, R_max + 1):
+        P = measure(oracle_fn(N, edges, R), edges)
+        if P > best_P:
+            best_R, best_P = R, P
+    return best_R, best_P
+
+
 def main():
-    print(f"{'Topology':<18} | {'K^N':<5} | {'|S*|':<5} | {'R':<3} | "
-          f"{'Belletti':<10} | {'Belletti+SP':<13} | {'MSB-Overflow':<13}")
-    print("-" * 95)
+    print(f"{'Topology':<18} | {'K^N':<5} | {'|S*|':<5} | "
+          f"{'Belletti orig':<20} | {'Unweighted CSP Oracle':<25} | "
+          f"{'MSB-Overflow UW'}")
+    print(f"{'':<18} | {'':<5} | {'':<5} | "
+          f"{'R*':<3}  {'P_prop':<14} | {'R*':<3}  {'P_prop':<19} | "
+          f"{'R*':<3}  {'P_prop'}")
+    print("-" * 115)
     for name, N, edges in TOPOLOGIES:
         M = count_proper_colorings(N, edges)
-        R = optimal_grover_R(N, M)
-
-        Pa = measure(belletti_original(N, edges, R), edges)
-        Pb = measure(belletti_with_our_state_prep(N, edges, R), edges)
-        Pc = measure(msb_overflow_unweighted(N, edges, R), edges)
-
-        # Strip latex markup for printing
+        Ra, Pa = sweep_R(belletti_original, N, edges)
+        Rb, Pb = sweep_R(belletti_with_our_state_prep, N, edges)
+        Rc, Pc = sweep_R(msb_overflow_unweighted, N, edges)
         nm = name.replace("$", "").replace("_", "")
-        print(f"{nm:<18} | {K**N:<5} | {M:<5} | {R:<3} | "
-              f"{Pa*100:>7.2f}%  | {Pb*100:>10.2f}%  | {Pc*100:>10.2f}%")
+        print(f"{nm:<18} | {K**N:<5} | {M:<5} | "
+              f"{Ra:<3}  {Pa*100:>9.2f}%   | "
+              f"{Rb:<3}  {Pb*100:>14.2f}%   | "
+              f"{Rc:<3}  {Pc*100:>9.2f}%")
 
 
 if __name__ == "__main__":
