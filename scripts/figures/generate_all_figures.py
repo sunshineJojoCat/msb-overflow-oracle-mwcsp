@@ -222,8 +222,8 @@ def generate_fig1_before_after():
     ax1.text(6.9, 2.2, '$\\mathcal{O}(S^2)$\ndepth', fontsize=8, ha='center', va='center', color='#C62828', style='italic')
 
     # Uncompute
-    ax1.add_patch(FancyBboxPatch((7.95, 0.5), 1.95, 5.0, boxstyle="round,pad=0.05", fc='#E0E0E0', ec='gray', lw=1))
-    ax1.text(8.925, 3.0, 'Uncompute', fontsize=8, ha='center', va='center')
+    ax1.add_patch(FancyBboxPatch((8.2, 0.5), 0.6, 5.0, boxstyle="round,pad=0.05", fc='#E0E0E0', ec='gray', lw=1))
+    ax1.text(8.5, 3.0, 'Un-\ncomp', fontsize=8, ha='center', va='center')
 
     # --- RIGHT: Proposed Oracle ---
     ax2.set_xlim(0, 10); ax2.set_ylim(0, 6)
@@ -260,14 +260,14 @@ def generate_fig1_before_after():
     ax2.plot([6.86, 7.14], [0.5, 0.5], '-', color='#1B5E20', lw=2)  # plus horizontal
     ax2.plot([7.0, 7.0], [0.36, 0.64], '-', color='#1B5E20', lw=2)  # plus vertical
 
-    ax2.annotate('Single CNOT\n$\\mathcal{O}(1)$', xy=(7.0, 0.9), xytext=(7.0, 3.5), ha='center',
+    ax2.annotate('Single CNOT\n$\\mathcal{O}(1)$', xy=(7.0, 0.9), xytext=(8.0, 1.8),
                 fontsize=8, fontweight='bold', color='#1B5E20',
                 arrowprops=dict(arrowstyle='->', color='#1B5E20', lw=1.5),
                 bbox=dict(boxstyle='round,pad=0.3', fc='#E8F5E9', ec='#1B5E20'))
 
     # Uncompute
-    ax2.add_patch(FancyBboxPatch((7.7, 0.2), 2.0, 5.3, boxstyle="round,pad=0.05", fc='#E0E0E0', ec='gray', lw=1))
-    ax2.text(8.7, 3.0, 'Uncompute', fontsize=8, ha='center', va='center')
+    ax2.add_patch(FancyBboxPatch((7.8, 0.2), 0.8, 5.3, boxstyle="round,pad=0.05", fc='#E0E0E0', ec='gray', lw=1))
+    ax2.text(8.2, 3.0, 'Un-\ncomp', fontsize=8, ha='center', va='center')
 
     plt.tight_layout()
     plt.savefig('fig_before_after.pdf')
