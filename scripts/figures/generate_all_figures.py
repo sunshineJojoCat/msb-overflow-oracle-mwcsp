@@ -673,7 +673,7 @@ def generate_circuit_walkthrough_figs():
     # Incrementor for bit 0 (add 1 starting from s0): ans controls cascade on s0,s1,s2,s3
     ax.add_patch(FancyBboxPatch((0.5, -0.6), 3.0, 3.6, boxstyle="round,pad=0.08",
                  fc='#FFF9C4', ec='#F57F17', lw=1.5, alpha=0.3))
-    ax.text(2.0, 3.05, 'Inc from $s_0$', fontsize=8, ha='center', color='#F57F17', fontweight='bold')
+    ax.text(2.0, 3.05, 'Inc from $s_0$', fontsize=10, ha='center', color='#F57F17', fontweight='bold')
 
     # MCX: ans,s0,s1,s2 -> s3
     _draw_toffoli(ax, [2.8, 2.0, 1.2, 0.4], -0.4, 1.0, color='#E65100')
@@ -687,7 +687,7 @@ def generate_circuit_walkthrough_figs():
     # Incrementor for bit 1 (add 1 starting from s1): ans controls cascade on s1,s2,s3
     ax.add_patch(FancyBboxPatch((4.5, -0.6), 2.8, 3.6, boxstyle="round,pad=0.08",
                  fc='#E3F2FD', ec='#1565C0', lw=1.5, alpha=0.3))
-    ax.text(5.9, 3.05, 'Inc from $s_1$', fontsize=8, ha='center', color='#1565C0', fontweight='bold')
+    ax.text(5.9, 3.05, 'Inc from $s_1$', fontsize=10, ha='center', color='#1565C0', fontweight='bold')
 
     # MCX: ans,s1,s2 -> s3
     _draw_toffoli(ax, [2.8, 1.2, 0.4], -0.4, 5.2, color='#1565C0')
@@ -727,7 +727,8 @@ def generate_circuit_walkthrough_figs():
     ax.add_patch(FancyBboxPatch((1.8, -0.7), 2.0, 3.3, boxstyle="round,pad=0.08",
                  fc='#FFF9C4', ec='#F57F17', lw=1.5, alpha=0.4))
     ax.text(2.8, 1.0, 'Edge Checks\n+\nAdders\n($\\forall e \\in E$)', fontsize=8, ha='center', va='center',
-            fontweight='bold', color='#F57F17')
+            fontweight='bold', color='#F57F17',
+            bbox=dict(boxstyle='round,pad=0.25', fc='#FFF9C4', ec='none'))
 
     # Barrier
     _draw_barrier(ax, 4.2, -0.5, 2.4)
