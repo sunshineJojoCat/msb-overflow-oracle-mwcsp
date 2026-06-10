@@ -200,7 +200,7 @@ def generate_fig1_before_after():
     labels = ['$|node_0\\rangle$', '$|node_1\\rangle$', '$|score\\rangle$', '$|phase\\rangle$']
     y_positions = [5, 4, 2, 0.8]
     for y, lbl in zip(y_positions, labels):
-        ax1.plot([1.5, 9], [y, y], 'k-', linewidth=0.8)
+        ax1.plot([1.5, 9], [y, y], 'k-', linewidth=0.8, zorder=0.5)
         ax1.text(0.1, y, lbl, fontsize=8, va='center', fontfamily='serif')
 
     # Hadamard blocks
@@ -233,7 +233,7 @@ def generate_fig1_before_after():
     labels2 = ['$|node_0\\rangle$', '$|node_1\\rangle$', '$|score\\rangle$', '$|msb\\rangle$', '$|phase\\rangle$']
     y_pos2 = [5, 4, 2.5, 1.3, 0.5]
     for y, lbl in zip(y_pos2, labels2):
-        ax2.plot([1.8, 9], [y, y], 'k-', linewidth=0.8)
+        ax2.plot([1.8, 9], [y, y], 'k-', linewidth=0.8, zorder=0.5)
         ax2.text(0.1, y, lbl, fontsize=8, va='center', fontfamily='serif')
 
     # Custom State Prep
@@ -581,7 +581,7 @@ def generate_circuit_walkthrough_figs():
 
     qubits = {1.2: '$q_0$', 0.4: '$q_1$'}
     for y, lbl in qubits.items():
-        ax.plot([-0.1, 6.0], [y, y], 'k-', lw=0.8)
+        ax.plot([-0.1, 6.0], [y, y], 'k-', lw=0.8, zorder=0.5)
         ax.text(-0.45, y, lbl, fontsize=9, va='center', fontfamily='serif')
     ax.text(3.0, 1.65, 'Custom State Prep: $K=3$, $q=2$', fontsize=10, ha='center', fontweight='bold')
 
@@ -618,8 +618,8 @@ def generate_circuit_walkthrough_figs():
     wire_ys = [2.6, 1.8, 1.0, 0.2]
     ans_y = -0.2
     for y in wire_ys:
-        ax.plot([-0.3, 9.0], [y, y], 'k-', lw=0.8)
-    ax.plot([-0.3, 9.0], [ans_y, ans_y], 'k-', lw=0.8)
+        ax.plot([-0.3, 9.0], [y, y], 'k-', lw=0.8, zorder=0.5)
+    ax.plot([-0.3, 9.0], [ans_y, ans_y], 'k-', lw=0.8, zorder=0.5)
     labels_y = {'$u_0$': 2.6, '$u_1$': 1.8, '$v_0$': 1.0, '$v_1$': 0.2, '$ans$': ans_y}
     for lbl, y in labels_y.items():
         ax.text(-0.75, y, lbl, fontsize=9, va='center', fontfamily='serif')
@@ -666,7 +666,7 @@ def generate_circuit_walkthrough_figs():
 
     adder_wires = {2.8: '$ans$', 2.0: '$s_0$', 1.2: '$s_1$', 0.4: '$s_2$', -0.4: '$s_3$ (MSB)'}
     for y, lbl in adder_wires.items():
-        ax.plot([-0.3, 8.5], [y, y], 'k-', lw=0.8)
+        ax.plot([-0.3, 8.5], [y, y], 'k-', lw=0.8, zorder=0.5)
         ax.text(-0.75, y, lbl, fontsize=8, va='center', fontfamily='serif')
     ax.text(4.0, 3.3, 'Controlled Add $w=3$ ($11_2$): Bit 0 + Bit 1', fontsize=10, ha='center', fontweight='bold')
 
@@ -709,7 +709,7 @@ def generate_circuit_walkthrough_figs():
 
     of_wires = {2.4: '$s_0$', 1.6: '$s_1$', 0.8: '$s_2$', 0.0: '$s_{MSB}$ (flag)', -0.5: '$|-\\rangle$ (phase)'}
     for y, lbl in of_wires.items():
-        ax.plot([-0.3, 7.5], [y, y], 'k-', lw=0.8)
+        ax.plot([-0.3, 7.5], [y, y], 'k-', lw=0.8, zorder=0.5)
         ax.text(-1.0, y, lbl, fontsize=8, va='center', fontfamily='serif')
     ax.text(3.5, 2.8, 'MSB Overflow Detection & Phase Kickback', fontsize=10, ha='center', fontweight='bold')
 

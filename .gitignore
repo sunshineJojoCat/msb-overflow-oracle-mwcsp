@@ -21,6 +21,11 @@ paper/*.synctex.gz
 paper/*.out
 paper/*.toc
 
+# Local manuscript working copy (kept here so the paper can be compiled inside
+# this repo for convenience; the manuscript itself is distributed through the
+# journal and must NOT be committed to this public reproducibility repo)
+paper/
+
 # Editor / IDE
 .vscode/
 .idea/
