@@ -26,6 +26,9 @@ paper/*.toc
 # journal and must NOT be committed to this public reproducibility repo)
 paper/
 
+# Local Overleaf upload bundle (manuscript sources; not part of the public repo)
+overleaf_upload_temp/
+
 # Editor / IDE
 .vscode/
 .idea/
