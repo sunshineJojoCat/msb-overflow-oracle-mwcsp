@@ -47,25 +47,25 @@ msb-overflow-oracle-mwcsp/
 ├── LICENSE                                ← MIT
 ├── requirements.txt                       ← pinned Python dependencies
 ├── .gitignore
-├── figures/                               ← 8 published PNGs (one per \includegraphics in the paper)
-│   ├── fig_all_topologies.png
-│   ├── fig_before_after.png
-│   ├── fig_circuit_adder.png
-│   ├── fig_circuit_edge_check.png
-│   ├── fig_circuit_overflow.png
-│   ├── fig_circuit_state_prep.png
-│   ├── fig_measurement.png
-│   └── fig_scaling.png
+├── figures/                               ← 8 published vector PDFs (one per \includegraphics in the paper)
+│   ├── fig_all_topologies.pdf
+│   ├── fig_before_after.pdf
+│   ├── fig_circuit_adder.pdf
+│   ├── fig_circuit_edge_check.pdf
+│   ├── fig_circuit_overflow.pdf
+│   ├── fig_circuit_state_prep.pdf
+│   ├── fig_measurement.pdf
+│   └── fig_scaling.pdf
 └── scripts/
     ├── reproducibility/                   ← regenerates the paper's numerical claims
     │   ├── verify_table2.py               ← Table II (and re-uses oracle code in noisy/extend)
     │   ├── noisy_simulation.py            ← Table VI
     │   └── extend_table_scaling.py        ← Table VII
-    ├── figures/                           ← regenerates the published PNGs
+    ├── figures/                           ← regenerates the published vector PDFs
     │   ├── generate_all_figures.py        ← 8 of 8 paper figures
     │   ├── generate_all_topologies.py     ← topology grid (Fig 2)
     │   ├── generate_publication_figures.py ← legacy variants
-    │   └── export_pics.py                 ← misc PNG export helper
+    │   └── export_pics.py                 ← misc image export helper
     └── baselines/                         ← QAOA comparison (feeds Table V)
         ├── simulate_qaoa_paper_topologies.py
         ├── simulate_qaoa_mwcsp_full.py
@@ -141,7 +141,7 @@ cd scripts/figures
 ../../../.venv/bin/python generate_all_topologies.py
 ```
 
-PNGs land next to the script; copy them into `../../figures/` to overwrite the published versions.
+Vector PDFs land next to the script; copy them into `../../figures/` to overwrite the published versions. Figures are rendered at their true on-page width and exported as vector PDF so `\includegraphics` does not down-scale them, keeping all in-figure text at roughly the figure-caption font size.
 
 ---
 

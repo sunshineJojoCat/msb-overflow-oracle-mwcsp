@@ -25,14 +25,25 @@ except ImportError:
 # ============================================================
 # IEEE-quality plot configuration
 # ============================================================
+# NOTE ON LEGIBILITY (IEEE TQE resubmission fix):
+# Figures are now rendered at their true on-page width (single column ~3.36 in,
+# double column ~6.9 in for the dense figures) so that the vector PDF is NOT
+# scaled down by \includegraphics. With the scale factor at ~1, the nominal
+# point sizes below print at face value, keeping all labels at >= ~8 pt
+# (comparable to the figure-caption font). All figures are exported as vector
+# PDF rather than bitmap PNG.
 plt.rcParams.update({
     'font.family': 'serif',
     'font.serif': ['Times New Roman', 'DejaVu Serif'],
-    'font.size': 10,
-    'axes.labelsize': 11,
-    'axes.titlesize': 12,
+    'font.size': 9,
+    'axes.labelsize': 9,
+    'axes.titlesize': 10,
+    'legend.fontsize': 8,
+    'xtick.labelsize': 8,
+    'ytick.labelsize': 8,
     'figure.dpi': 300,
     'savefig.dpi': 300,
+    'savefig.format': 'pdf',
     'savefig.bbox': 'tight',
     'savefig.pad_inches': 0.05,
 })
@@ -178,7 +189,7 @@ def create_weighted_balanced_oracle(N, K, weighted_edges, chunk_size, target_sco
 # ============================================================
 def generate_fig1_before_after():
     print("[1/9] Generating Before & After Circuit Comparison...")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.16, 3.0))  # IEEE column width
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.9, 2.9))  # IEEE double-column width
 
     # --- LEFT: Traditional Oracle ---
     ax1.set_xlim(0, 10); ax1.set_ylim(0, 6)
@@ -199,20 +210,20 @@ def generate_fig1_before_after():
 
     # Collision checker
     ax1.add_patch(FancyBboxPatch((3.0, 0.5), 1.2, 5.0, boxstyle="round,pad=0.05", fc='#C8E6C9', ec='#2E7D32', lw=1.5))
-    ax1.text(3.6, 3.0, 'Edge\nCheck', fontsize=7, ha='center', va='center', fontweight='bold')
+    ax1.text(3.6, 3.0, 'Edge\nCheck', fontsize=8, ha='center', va='center', fontweight='bold')
 
     # Adder block
     ax1.add_patch(FancyBboxPatch((4.6, 0.5), 1.0, 5.0, boxstyle="round,pad=0.05", fc='#FFF9C4', ec='#F57F17', lw=1.5))
-    ax1.text(5.1, 3.0, 'Adder', fontsize=7, ha='center', va='center', fontweight='bold')
+    ax1.text(5.1, 3.0, 'Adder', fontsize=8, ha='center', va='center', fontweight='bold')
 
     # MASSIVE MCX block (the problem)
     ax1.add_patch(FancyBboxPatch((6.0, 0.5), 1.8, 5.0, boxstyle="round,pad=0.05", fc='#FFCDD2', ec='#C62828', lw=2.5))
     ax1.text(6.9, 3.5, '$S$-qubit\nMCX', fontsize=9, ha='center', va='center', fontweight='bold', color='#C62828')
-    ax1.text(6.9, 2.2, '$\\mathcal{O}(S^2)$\ndepth', fontsize=7, ha='center', va='center', color='#C62828', style='italic')
+    ax1.text(6.9, 2.2, '$\\mathcal{O}(S^2)$\ndepth', fontsize=8, ha='center', va='center', color='#C62828', style='italic')
 
     # Uncompute
     ax1.add_patch(FancyBboxPatch((8.2, 0.5), 0.6, 5.0, boxstyle="round,pad=0.05", fc='#E0E0E0', ec='gray', lw=1))
-    ax1.text(8.5, 3.0, 'Un-\ncomp', fontsize=6, ha='center', va='center')
+    ax1.text(8.5, 3.0, 'Un-\ncomp', fontsize=8, ha='center', va='center')
 
     # --- RIGHT: Proposed Oracle ---
     ax2.set_xlim(0, 10); ax2.set_ylim(0, 6)
@@ -232,15 +243,15 @@ def generate_fig1_before_after():
 
     # Offset init (X gates on score)
     ax2.add_patch(FancyBboxPatch((3.2, 2.2), 0.7, 0.6, boxstyle="round,pad=0.05", fc='#BBDEFB', ec='#1565C0', lw=1))
-    ax2.text(3.55, 2.5, 'Offset\n$X$', fontsize=6, ha='center', va='center', fontweight='bold')
+    ax2.text(3.55, 2.5, 'Offset\n$X$', fontsize=8, ha='center', va='center', fontweight='bold')
 
     # Edge Check
     ax2.add_patch(FancyBboxPatch((4.2, 0.2), 1.0, 5.3, boxstyle="round,pad=0.05", fc='#C8E6C9', ec='#2E7D32', lw=1.5))
-    ax2.text(4.7, 3.0, 'Edge\nCheck', fontsize=7, ha='center', va='center', fontweight='bold')
+    ax2.text(4.7, 3.0, 'Edge\nCheck', fontsize=8, ha='center', va='center', fontweight='bold')
 
     # Adder
     ax2.add_patch(FancyBboxPatch((5.5, 0.2), 0.8, 5.3, boxstyle="round,pad=0.05", fc='#FFF9C4', ec='#F57F17', lw=1.5))
-    ax2.text(5.9, 3.0, 'Adder', fontsize=7, ha='center', va='center', fontweight='bold')
+    ax2.text(5.9, 3.0, 'Adder', fontsize=8, ha='center', va='center', fontweight='bold')
 
     # SINGLE CNOT (the solution!)
     ax2.plot(7.0, 1.3, 'o', markersize=10, color='#1B5E20', markerfacecolor='#1B5E20')  # control dot
@@ -256,12 +267,12 @@ def generate_fig1_before_after():
 
     # Uncompute
     ax2.add_patch(FancyBboxPatch((7.8, 0.2), 0.8, 5.3, boxstyle="round,pad=0.05", fc='#E0E0E0', ec='gray', lw=1))
-    ax2.text(8.2, 3.0, 'Un-\ncomp', fontsize=6, ha='center', va='center')
+    ax2.text(8.2, 3.0, 'Un-\ncomp', fontsize=8, ha='center', va='center')
 
     plt.tight_layout()
-    plt.savefig('fig_before_after.png')
+    plt.savefig('fig_before_after.pdf')
     plt.close()
-    print("   -> fig_before_after.png saved.")
+    print("   -> fig_before_after.pdf saved.")
 
 
 # ============================================================
@@ -290,19 +301,19 @@ def generate_fig2_pareto():
 
     # Annotations — positioned to avoid all overlaps
     ax.annotate('Min Width\n(fewest qubits)', xy=(14, 2217),
-               xytext=(16.5, 2350), fontsize=6.5, ha='center',
+               xytext=(16.5, 2350), fontsize=8, ha='center',
                arrowprops=dict(arrowstyle='->', lw=0.8, color='#1565C0'),
                color='#1565C0', fontweight='bold',
                bbox=dict(boxstyle='round,pad=0.2', fc='white', ec='#1565C0', alpha=0.8))
 
     ax.annotate('Min Depth\n(shallowest)', xy=(20, 385),
-               xytext=(17.8, 150), fontsize=6.5, ha='center',
+               xytext=(17.8, 150), fontsize=8, ha='center',
                arrowprops=dict(arrowstyle='->', lw=0.8, color='#C62828'),
                color='#C62828', fontweight='bold',
                bbox=dict(boxstyle='round,pad=0.2', fc='white', ec='#C62828', alpha=0.8))
 
     ax.annotate('Balanced\n(sweet spot)', xy=(17, 1289),
-               xytext=(13.5, 1050), fontsize=6.5, ha='center',
+               xytext=(13.5, 1050), fontsize=8, ha='center',
                arrowprops=dict(arrowstyle='->', lw=1.0, color='#2E7D32'),
                color='#2E7D32', fontweight='bold',
                bbox=dict(boxstyle='round,pad=0.2', fc='#E8F5E9', ec='#2E7D32', alpha=0.9))
@@ -310,15 +321,15 @@ def generate_fig2_pareto():
     ax.set_xlabel('Qubit Width', fontweight='bold')
     ax.set_ylabel('Transpiled Circuit Depth', fontweight='bold')
     ax.set_title('Frustrated $K_4$: Space-Time Trade-off', fontsize=10, fontweight='bold')
-    ax.legend(loc='upper right', fontsize=7, framealpha=0.9)
+    ax.legend(loc='upper right', fontsize=8, framealpha=0.9)
     ax.grid(True, alpha=0.3)
     ax.set_xlim(12.5, 22)
     ax.set_ylim(-50, 2600)
 
     plt.tight_layout()
-    plt.savefig('fig_pareto.png')
+    plt.savefig('fig_pareto.pdf')
     plt.close()
-    print("   -> fig_pareto.png saved.")
+    print("   -> fig_pareto.pdf saved.")
 
 
 # ============================================================
@@ -358,7 +369,7 @@ def generate_fig3_measurement():
         probs = probs / probs.sum()
         states[0:6] = ['01020120', '02010210', '10020120', '20010210', '01020210', '02010120']
 
-    fig, ax = plt.subplots(figsize=(7.16, 2.8))
+    fig, ax = plt.subplots(figsize=(6.9, 2.8))
 
     # Determine optimal states (top probability cluster)
     threshold = max(probs) * 0.5
@@ -375,7 +386,7 @@ def generate_fig3_measurement():
     ax.set_ylabel('Probability', fontweight='bold')
     ax.set_title('Grover Measurement Distribution: Frustrated $K_4$ ($K\\!=\\!3$, 2 iterations)', fontsize=10, fontweight='bold')
     ax.set_xticks(range(len(states)))
-    ax.set_xticklabels(states, rotation=75, fontsize=5, fontfamily='monospace')
+    ax.set_xticklabels(states, rotation=75, fontsize=8, fontfamily='monospace')
 
     # Legend
     legend_elements = [
@@ -383,13 +394,13 @@ def generate_fig3_measurement():
         mpatches.Patch(facecolor='#BBDEFB', edgecolor='#64B5F6', label='Non-optimal states'),
         Line2D([0], [0], color='red', linestyle='--', label=f'Uniform baseline ($1/{K_N}$)')
     ]
-    ax.legend(handles=legend_elements, fontsize=7, loc='upper right')
+    ax.legend(handles=legend_elements, fontsize=8, loc='upper right')
     ax.grid(True, axis='y', alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig('fig_measurement.png')
+    plt.savefig('fig_measurement.pdf')
     plt.close()
-    print("   -> fig_measurement.png saved.")
+    print("   -> fig_measurement.pdf saved.")
 
 
 # ============================================================
@@ -446,7 +457,7 @@ def generate_fig4_heavy_hex():
     for q, label in s4_mapping.items():
         offset = (0.3, 0.25) if q != 12 else (0.3, -0.25)
         ax.annotate(label, xy=pos[q], xytext=(pos[q][0]+offset[0], pos[q][1]+offset[1]),
-                   fontsize=7, fontweight='bold',
+                   fontsize=8, fontweight='bold',
                    arrowprops=dict(arrowstyle='->', lw=0.8),
                    bbox=dict(boxstyle='round,pad=0.2', fc='white', ec='gray', alpha=0.9))
 
@@ -465,12 +476,12 @@ def generate_fig4_heavy_hex():
         Line2D([0], [0], color='#E53935', linestyle='--', lw=2, label='SWAP routes'),
         Line2D([0], [0], marker='o', color='w', markerfacecolor='#ECEFF1', markersize=8, markeredgecolor='#78909C', label='Idle qubits'),
     ]
-    ax.legend(handles=legend_elements, fontsize=6, loc='lower left', framealpha=0.9)
+    ax.legend(handles=legend_elements, fontsize=8, loc='lower left', framealpha=0.9)
 
     plt.tight_layout()
-    plt.savefig('fig_heavy_hex.png')
+    plt.savefig('fig_heavy_hex.pdf')
     plt.close()
-    print("   -> fig_heavy_hex.png saved.")
+    print("   -> fig_heavy_hex.pdf saved.")
 
 
 # ============================================================
@@ -478,7 +489,7 @@ def generate_fig4_heavy_hex():
 # ============================================================
 def generate_fig5_scaling():
     print("[5/9] Generating Asymptotic Scaling Line Graph...")
-    fig, ax = plt.subplots(figsize=(3.5, 3.0))
+    fig, ax = plt.subplots(figsize=(3.36, 2.9))  # IEEE single-column width
 
     N_values = [5, 10, 20, 50, 100]
     K = 3
@@ -515,14 +526,14 @@ def generate_fig5_scaling():
     ax.set_xlabel('Number of Nodes ($N$)', fontweight='bold')
     ax.set_ylabel('Estimated $T$-Gate Depth (log scale)', fontweight='bold')
     ax.set_title('Asymptotic $T$-Depth Scaling', fontsize=10, fontweight='bold')
-    ax.legend(fontsize=7, loc='upper left', framealpha=0.9)
+    ax.legend(fontsize=8, loc='upper left', framealpha=0.9)
     ax.grid(True, which='both', alpha=0.3)
     ax.set_xticks(N_values)
 
     plt.tight_layout()
-    plt.savefig('fig_scaling.png')
+    plt.savefig('fig_scaling.pdf')
     plt.close()
-    print("   -> fig_scaling.png saved.")
+    print("   -> fig_scaling.pdf saved.")
 
 
 # ============================================================
@@ -556,7 +567,7 @@ def _draw_barrier(ax, x, y_min, y_max, label=None):
     """Draw a dashed barrier line."""
     ax.plot([x, x], [y_min - 0.15, y_max + 0.15], '--', color='gray', lw=0.8, alpha=0.6)
     if label:
-        ax.text(x, y_max + 0.3, label, fontsize=6, ha='center', color='gray', style='italic')
+        ax.text(x, y_max + 0.3, label, fontsize=8, ha='center', color='gray', style='italic')
 
 # ============================================================
 # CIRCUIT WALKTHROUGH FIGURES (Pure Matplotlib)
@@ -564,7 +575,7 @@ def _draw_barrier(ax, x, y_min, y_max, label=None):
 def generate_circuit_walkthrough_figs():
     # --- Fig 6: State Preparation for K=3 on 2 qubits ---
     print("[6/9] Generating State Prep circuit diagram...")
-    fig, ax = plt.subplots(figsize=(5, 2.0))
+    fig, ax = plt.subplots(figsize=(3.36, 1.7))  # IEEE single-column width
     ax.set_xlim(-0.5, 6.5); ax.set_ylim(-0.5, 1.8)
     ax.axis('off')
 
@@ -593,13 +604,13 @@ def generate_circuit_walkthrough_figs():
                bbox=dict(boxstyle='round,pad=0.3', fc='#E8F5E9', ec='#2E7D32', alpha=0.9))
 
     plt.tight_layout()
-    plt.savefig('fig_circuit_state_prep.png')
+    plt.savefig('fig_circuit_state_prep.pdf')
     plt.close()
-    print("   -> fig_circuit_state_prep.png saved.")
+    print("   -> fig_circuit_state_prep.pdf saved.")
 
     # --- Fig 7: Edge Collision Checker ---
     print("[7/9] Generating Edge Collision Checker circuit...")
-    fig, ax = plt.subplots(figsize=(7, 3.0))
+    fig, ax = plt.subplots(figsize=(6.9, 3.0))
     ax.set_xlim(-0.8, 9.5); ax.set_ylim(-0.5, 3.2)
     ax.axis('off')
 
@@ -638,18 +649,18 @@ def generate_circuit_walkthrough_figs():
     _draw_gate(ax, 8.0, ans_y, 'X', color='#C8E6C9', fontsize=9, ec='#2E7D32')
 
     ax.annotate('$|ans\\rangle = |1\\rangle$ iff\n$C(u) \\neq C(v)$', xy=(8.5, -0.2),
-               xytext=(8.5, 0.7), fontsize=7, ha='center', fontweight='bold', color='#2E7D32',
+               xytext=(8.5, 0.7), fontsize=8, ha='center', fontweight='bold', color='#2E7D32',
                arrowprops=dict(arrowstyle='->', color='#2E7D32'),
                bbox=dict(boxstyle='round,pad=0.2', fc='#E8F5E9', ec='#2E7D32'))
 
     plt.tight_layout()
-    plt.savefig('fig_circuit_edge_check.png')
+    plt.savefig('fig_circuit_edge_check.pdf')
     plt.close()
-    print("   -> fig_circuit_edge_check.png saved.")
+    print("   -> fig_circuit_edge_check.pdf saved.")
 
     # --- Fig 8: Carry-Ripple Adder (adding w=3) ---
     print("[8/9] Generating Carry-Ripple Adder circuit...")
-    fig, ax = plt.subplots(figsize=(7, 3.5))
+    fig, ax = plt.subplots(figsize=(6.9, 3.4))
     ax.set_xlim(-0.8, 9.0); ax.set_ylim(-0.8, 3.5)
     ax.axis('off')
 
@@ -662,7 +673,7 @@ def generate_circuit_walkthrough_figs():
     # Incrementor for bit 0 (add 1 starting from s0): ans controls cascade on s0,s1,s2,s3
     ax.add_patch(FancyBboxPatch((0.5, -0.6), 3.0, 3.6, boxstyle="round,pad=0.08",
                  fc='#FFF9C4', ec='#F57F17', lw=1.5, alpha=0.3))
-    ax.text(2.0, 3.05, 'Inc from $s_0$', fontsize=7, ha='center', color='#F57F17', fontweight='bold')
+    ax.text(2.0, 3.05, 'Inc from $s_0$', fontsize=8, ha='center', color='#F57F17', fontweight='bold')
 
     # MCX: ans,s0,s1,s2 -> s3
     _draw_toffoli(ax, [2.8, 2.0, 1.2, 0.4], -0.4, 1.0, color='#E65100')
@@ -676,7 +687,7 @@ def generate_circuit_walkthrough_figs():
     # Incrementor for bit 1 (add 1 starting from s1): ans controls cascade on s1,s2,s3
     ax.add_patch(FancyBboxPatch((4.5, -0.6), 2.8, 3.6, boxstyle="round,pad=0.08",
                  fc='#E3F2FD', ec='#1565C0', lw=1.5, alpha=0.3))
-    ax.text(5.9, 3.05, 'Inc from $s_1$', fontsize=7, ha='center', color='#1565C0', fontweight='bold')
+    ax.text(5.9, 3.05, 'Inc from $s_1$', fontsize=8, ha='center', color='#1565C0', fontweight='bold')
 
     # MCX: ans,s1,s2 -> s3
     _draw_toffoli(ax, [2.8, 1.2, 0.4], -0.4, 5.2, color='#1565C0')
@@ -686,27 +697,27 @@ def generate_circuit_walkthrough_figs():
     _draw_cnot(ax, 2.8, 1.2, 6.8)
 
     plt.tight_layout()
-    plt.savefig('fig_circuit_adder.png')
+    plt.savefig('fig_circuit_adder.pdf')
     plt.close()
-    print("   -> fig_circuit_adder.png saved.")
+    print("   -> fig_circuit_adder.pdf saved.")
 
     # --- Fig 9: Overflow Detection & Phase Kickback ---
     print("[9/9] Generating Overflow Detection circuit...")
-    fig, ax = plt.subplots(figsize=(6, 2.8))
+    fig, ax = plt.subplots(figsize=(6.9, 3.0))
     ax.set_xlim(-1.0, 8.0); ax.set_ylim(-0.8, 3.0)
     ax.axis('off')
 
     of_wires = {2.4: '$s_0$', 1.6: '$s_1$', 0.8: '$s_2$', 0.0: '$s_{MSB}$ (flag)', -0.5: '$|-\\rangle$ (phase)'}
     for y, lbl in of_wires.items():
         ax.plot([-0.3, 7.5], [y, y], 'k-', lw=0.8)
-        ax.text(-1.0, y, lbl, fontsize=7, va='center', fontfamily='serif')
+        ax.text(-1.0, y, lbl, fontsize=8, va='center', fontfamily='serif')
     ax.text(3.5, 2.8, 'MSB Overflow Detection & Phase Kickback', fontsize=10, ha='center', fontweight='bold')
 
     # Offset init: X on s0, X on s2 (offset = 5 = 101)
     _draw_gate(ax, 0.5, 2.4, 'X', color='#BBDEFB', ec='#1565C0', fontsize=9)
     _draw_gate(ax, 0.5, 0.8, 'X', color='#BBDEFB', ec='#1565C0', fontsize=9)
     ax.annotate('Offset = 5\n($101_2$)', xy=(0.5, 1.6), xytext=(0.5, -0.8),
-               fontsize=6, ha='center', color='#1565C0',
+               fontsize=8, ha='center', color='#1565C0',
                bbox=dict(boxstyle='round,pad=0.2', fc='#E3F2FD', ec='#1565C0'))
 
     # Barrier: Offset Init
@@ -715,7 +726,7 @@ def generate_circuit_walkthrough_figs():
     # Adder blocks placeholder
     ax.add_patch(FancyBboxPatch((1.8, -0.7), 2.0, 3.3, boxstyle="round,pad=0.08",
                  fc='#FFF9C4', ec='#F57F17', lw=1.5, alpha=0.4))
-    ax.text(2.8, 1.0, 'Edge Checks\n+\nAdders\n($\\forall e \\in E$)', fontsize=7, ha='center', va='center',
+    ax.text(2.8, 1.0, 'Edge Checks\n+\nAdders\n($\\forall e \\in E$)', fontsize=8, ha='center', va='center',
             fontweight='bold', color='#F57F17')
 
     # Barrier
@@ -724,22 +735,22 @@ def generate_circuit_walkthrough_figs():
     # THE KEY: Single CNOT from MSB to phase
     _draw_cnot(ax, 0.0, -0.5, 5.0)
     ax.annotate('Single CNOT\n$\\mathcal{O}(1)$ depth!', xy=(5.0, -0.25),
-               xytext=(6.2, 0.8), fontsize=8, ha='center', fontweight='bold', color='#1B5E20',
+               xytext=(5.0, 1.7), fontsize=8, ha='center', fontweight='bold', color='#1B5E20',
                arrowprops=dict(arrowstyle='->', color='#1B5E20', lw=1.5),
                bbox=dict(boxstyle='round,pad=0.3', fc='#E8F5E9', ec='#1B5E20'))
 
-    # Barrier
-    _draw_barrier(ax, 5.8, -0.5, 2.4, 'Phase Kickback')
+    # Barrier (label omitted; the figure title already names this stage)
+    _draw_barrier(ax, 5.8, -0.5, 2.4)
 
     # Uncompute
     ax.add_patch(FancyBboxPatch((6.2, -0.7), 1.0, 3.3, boxstyle="round,pad=0.08",
                  fc='#E0E0E0', ec='gray', lw=1, alpha=0.5))
-    ax.text(6.7, 1.0, 'Un-\ncompute', fontsize=7, ha='center', va='center', color='gray')
+    ax.text(6.7, 1.0, 'Un-\ncompute', fontsize=8, ha='center', va='center', color='gray')
 
     plt.tight_layout()
-    plt.savefig('fig_circuit_overflow.png')
+    plt.savefig('fig_circuit_overflow.pdf')
     plt.close()
-    print("   -> fig_circuit_overflow.png saved.")
+    print("   -> fig_circuit_overflow.pdf saved.")
 
 
 # ============================================================
@@ -760,14 +771,14 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("All figures generated successfully!")
     print("=" * 60)
-    print("\nGenerated files:")
-    print("  1. fig_before_after.png    (Figure 1: Traditional vs Proposed)")
-    print("  2. fig_pareto.png          (Figure 2: Pareto Frontier)")
-    print("  3. fig_measurement.png     (Figure 3: Measurement Histogram)")
-    print("  4. fig_heavy_hex.png       (Figure 4: Heavy-Hex Mapping)")
-    print("  5. fig_scaling.png         (Figure 5: Asymptotic Scaling)")
-    print("  6. fig_circuit_state_prep.png  (State Preparation)")
-    print("  7. fig_circuit_edge_check.png  (Edge Collision Checker)")
-    print("  8. fig_circuit_adder.png       (Carry-Ripple Adder)")
-    print("  9. fig_circuit_overflow.png    (MSB Overflow + Kickback)")
+    print("\nGenerated files (vector PDF):")
+    print("  1. fig_before_after.pdf    (Figure 1: Traditional vs Proposed)")
+    print("  2. fig_pareto.pdf          (Figure 2: Pareto Frontier)")
+    print("  3. fig_measurement.pdf     (Figure 3: Measurement Histogram)")
+    print("  4. fig_heavy_hex.pdf       (Figure 4: Heavy-Hex Mapping)")
+    print("  5. fig_scaling.pdf         (Figure 5: Asymptotic Scaling)")
+    print("  6. fig_circuit_state_prep.pdf  (State Preparation)")
+    print("  7. fig_circuit_edge_check.pdf  (Edge Collision Checker)")
+    print("  8. fig_circuit_adder.pdf       (Carry-Ripple Adder)")
+    print("  9. fig_circuit_overflow.pdf    (MSB Overflow + Kickback)")
     print("\nNext: Compile tqe_weighted.tex with pdflatex (run twice for refs).")
