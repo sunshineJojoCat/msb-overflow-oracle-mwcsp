@@ -51,7 +51,7 @@ G4 = nx.path_graph(5)
 edges4 = list(G4.edges())
 edge_weights4 = {edges4[0]: 3, edges4[1]: 7, edges4[2]: 2, edges4[3]: 6}
 nx.set_edge_attributes(G4, edge_weights4, 'weight')
-pos4 = nx.spring_layout(G4, seed=42)
+pos4 = {i: (i, i) for i in range(5)}  # uniform diagonal: equal spacing, every edge visible
 nx.draw(G4, pos4, ax=axes[3], with_labels=True, node_color=node_color, node_size=150, font_weight='bold', font_size=9)
 nx.draw_networkx_edge_labels(G4, pos4, edge_labels=edge_weights4, ax=axes[3], font_color='red', font_weight='bold', font_size=8)
 axes[3].set_title('Path $P_5$\n(N=5, E=4)')
